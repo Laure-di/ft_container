@@ -15,6 +15,8 @@ NAME	=	ft_container
 
 OBJSDIR	=	objs
 
+SRCSDIR	=	srcs/
+
 ######################################
 #            SOURCE FILES            #
 ######################################
@@ -48,7 +50,7 @@ $(NAME): ${OBJS}
 			${CC} ${FLAGS} ${OBJS} -o $@
 
 -include $(DEP)
-${OBJSDIR}/%.o:%.cpp | $(OBJSDIR)
+${OBJSDIR}/%.o:${SRCSDIR}%.cpp | $(OBJSDIR)
 			${CC} ${FLAGS} -c $< -o $@
 
 $(OBJSDIR):
