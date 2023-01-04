@@ -15,20 +15,18 @@ namespace ft
 				typedef		typename allocator_type::const_reference	const_reference;
 				typedef		typename allocator_type::pointer			pointer;
 				typedef		typename allocator_type::const_pointer		const_pointer;
-				typedef		std::random_access_iterator_tag					iterator; //TODO changer std to ft
-				typedef		std::random_access_iterator_tag					const_iterator; //TODO changer std to ft
+				typedef		std::random_access_iterator_tag				iterator; //TODO changer std to ft
+				typedef		std::random_access_iterator_tag<const>		const_iterator; //TODO changer std to ft
 				typedef		std::reverse_iterator<iterator>				reverse_iterator; //TODO changer std to ft
 				typedef		std::reverse_iterator<const_iterator>		const_reverse_iterator; //TODO changer std to ft
 				typedef		std::ptrdiff_t								difference_type;
-				typedef		typename allocator_type::size_type					size_type;
+				typedef		typename allocator_type::size_type			size_type;
 
 			private:
 				size_type		_capacity;
 				size_type		_size;
 				pointer			_data;
 				allocator_type	_alloc;
-
-
 			public:
 				/*
 				 ** @Brief : Constructs an empty container, with no elements.
@@ -249,13 +247,20 @@ namespace ft
 					return (this->_data);
 				};
 
-				void assign (size_type n, const value_type& val);
+				void assign (size_type n, const value_type& val)
+				{
+					if (capacity() < n)
+						reserve(n);
+					for (size_type i = 0; i < n; i++)
+						_alloc.construct(_data[i], val);
+					_size = n;
+				}
 
 				void push_back (const value_type& val);
 
 				void pop_back();
 
-				iterator insert (iterator position, const value_type& val);
+				iterator insert(iterator position, const value_type& val);
 
 				void insert (iterator position, size_type n, const value_type& val);
 
