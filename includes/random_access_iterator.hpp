@@ -66,10 +66,36 @@ namespace ft
 					_current--;
 					return (tmp);
 				};
-				random_access_iterator	operator+(difference_type n)
+				random_access_iterator	operator+(difference_type n) const
 				{
-
+					return (random_access_iterator(_current + n));
+				};
+				random_access_iterator&	operator+=(difference_type n)
+				{
+					_current += n;
+					return (*this);
+				};
+				random_access_iterator	operator-(difference_type n)
+				{
+					return (random_access_iterator(_current - n));
+				};
+				random_access_iterator& operator-=(difference_type n)
+				{
+					_current -= n;
+					return (*this);
+				};
+				difference_type			operator-(const random_access_iterator ptr)
+				{
+					return(random_access_iterator(ptr->_current - _current));
+				};
+				difference_type			operator+(const random_access_iterator ptr)
+				{
+					return(random_access_iterator(ptr->_current + _current));
 				};
 
+				reference	operator[](difference_type n)
+				{
+					return *(*this + n);
+				};
 		}
 }
