@@ -36,6 +36,10 @@ namespace ft
 				{
 					return _current;
 				};
+				random_access_iterator base(void)
+				{
+					return _current;
+				};
 				reference	operator*(void)const
 				{
 					return (*_current);
