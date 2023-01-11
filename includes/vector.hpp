@@ -29,6 +29,11 @@ namespace ft
 				allocator_type	_alloc;
 			public:
 				/*
+				** @Brief : constructor
+				*/
+				vector():_capacity(0), _size(0), _data(NULL), _alloc(allocator_type()){};
+
+				/*
 				 ** @Brief : Constructs an empty container, with no elements.
 				 */
 				explicit vector (const allocator_type& alloc = allocator_type()) : _capacity(0), _size(0), _data(NULL), _alloc(alloc){};
@@ -39,8 +44,7 @@ namespace ft
 				explicit vector (size_type n, const value_type& val = value_type(), const allocator_type& alloc = allocator_type())
 				{
 					_alloc = alloc;
-					//_data = _alloc.allocate(n);
-					reserve(n);
+					_data = _alloc.allocate(n);
 					_size = n;
 					int	i = 0;
 					while (i < n)
@@ -69,22 +73,34 @@ namespace ft
 				/*
 				 ** @Brief : Returns an iterator pointing to the first element in the vector.
 				 */
-				iterator begin();
+				iterator begin()
+				{
+					return (iterator(_data));
+				};
 
 				/*
 				 ** @Brief : Returns an const iterator pointing to the first element in the vector.
 				 */
-				const_iterator begin() const;
+				const_iterator begin() const
+				{
+					return (const_iterator(_data));
+				};
 
 				/*
 				 ** @Brief : Returns an iterator pointing to the last element in the vector.
 				 */
-				iterator end();
+				iterator end()
+				{
+					return (iterator(_data + _size));
+				};
 
 				/*
 				 ** @Brief : Returns an const iterator pointing to the last element in the vector.
 				 */
-				const_iterator end() const;
+				const_iterator end() const
+				{
+					return (const_iterator(_data + _size));
+				};
 
 				/*
 				 ** @Brief : rbegin points to the element right before the one that would be pointed to by member end. Returns a reverse random access iterator.
@@ -106,9 +122,15 @@ namespace ft
 				 */
 				const_reverse_iterator rend() const;
 
-				const_iterator cbegin() const ;
+				const_iterator cbegin() const
+				{
+					return (const_iterator(_data));
+				};
 
-				const_iterator cend() const ;
+				const_iterator cend() const
+				{
+					return (const_iterator(_data + _size);
+				};
 
 				const_reverse_iterator crbegin() const ;
 
