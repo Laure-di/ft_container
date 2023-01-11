@@ -196,7 +196,7 @@ namespace ft
 							newCapacity *= 2;
 					}
 					if (max_size() < newCapacity)
-						throw (std::length_error("vector reserve"));//TODO check erreur message
+						throw (std::length_error("vector::reserve"));//TODO check erreur message
 					if (capacity() < newCapacity)
 					{
 						pointer		newData = NULL;
@@ -228,9 +228,25 @@ namespace ft
 					return (this->_data[n]);
 				};
 
+				/*
+				** @Brief : Returns a reference to the element at position n in the vector.
+				*/
+				reference at(size_type n)
+				{
+					if (_size <= n)
+						throw std::out_of_range("vector::out_of_range");
+					_data[n];
+				};
 
-				reference at(size_type n);
-				const_reference at(size_type n) const;
+				/*
+				** @Brief : Returns a const reference to the element at position n in the vector.
+				*/
+				const_reference at(size_type n) const
+				{
+					if (_size <= n)
+						throw std::out_of_range("vector::out_of_range");
+					_data[n];
+				};
 
 				/*
 				 ** @Brief : Returns a reference to the first element in the vector.
@@ -291,7 +307,17 @@ namespace ft
 
 				void push_back (const value_type& val);
 
-				void pop_back();
+				/*
+				** @Brief : Removes the last element in the vector, effectively reducing the container size by one
+				*/
+				void pop_back()
+				{
+					if (_size != 0)
+					{
+						_alloc.destroy(_data + _size);
+						_size--;
+					}
+				};
 
 				iterator insert(iterator position, const value_type& val);
 
@@ -299,16 +325,23 @@ namespace ft
 
 				template <class InputIterator>    void insert (iterator position, InputIterator first, InputIterator last);
 
+				/*
+				** @Brief : Removes the element at pos
+				*/
 				iterator erase (iterator position)
 				{
 					return (erase(position, position + 1));
 				};
 
+				/*
+				** @Brief : Removes the elements in the range [first, last)
+				*/
 				iterator erase (iterator first, iterator last)
 				{
 					iterator	it = first;
 					int			length_to_delete = std::distance(first, last);
-					for (; last != end(); ++last; ++first) //equivalent to copy TODO checker si utilisation de copy n'est pas mieux
+					//equivalent to copy TODO checker si utilisation de copy n'est pas mieux
+					for (; last != end(); ++last; ++first)
 						*first = *last;
 					while (length_to_delete)
 					{
@@ -321,7 +354,17 @@ namespace ft
 
 				void swap (vector& x);
 
-				void clear();
+				/*
+				** @Brief: Removes all elements from the vector (which are destroyed), leaving the container with a size of 0.
+				*/
+				void clear()
+				{
+					while (_size)
+					{
+						_alloc.destroy(_data + _size);
+						_size--;
+					}
+				};
 
 				/*
 				 ** @Brief : Returns a copy of the allocator object associated with the vector.
