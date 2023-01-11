@@ -29,8 +29,8 @@ namespace ft
 				allocator_type	_alloc;
 			public:
 				/*
-				** @Brief : constructor
-				*/
+				 ** @Brief : constructor
+				 */
 				vector():_capacity(0), _size(0), _data(NULL), _alloc(allocator_type()){};
 
 				/*
@@ -61,7 +61,7 @@ namespace ft
 				/*
 				 ** @Brief : Constructs a container with a copy of each of the elements in x, in the same order.
 				 */
-				vector (const vector& x)
+				vector(const vector& x)
 				{
 					*this = x; //TODO need assign method
 				};
@@ -129,7 +129,7 @@ namespace ft
 
 				const_iterator cend() const
 				{
-					return (const_iterator(_data + _size);
+					return (const_iterator(_data + _size));
 				};
 
 				const_reverse_iterator crbegin() const ;
@@ -153,13 +153,20 @@ namespace ft
 				};
 
 				/*
-				** @Brief : Resizes the container so that it contains n elements.
-				*/
-				void resize (size_type n, value_type val = value_type());
+				 ** @Brief : Resizes the container so that it contains n elements.
+				 */
+				void resize (size_type n, value_type val = value_type())
+				{
+					if (n < _size)
+						//remove & destroy content beyond n
+					else if (_size < n && n < _capacity)
+						//content is expended
+					else if (_capacity < n)
+				};
 
 				/*
-				** @Brief : Returns the size of the storage space currently allocated for the vector, expressed in terms of elements
-				*/
+				 ** @Brief : Returns the size of the storage space currently allocated for the vector, expressed in terms of elements
+				 */
 				size_type capacity() const
 				{
 					return (_capacity);
@@ -176,8 +183,8 @@ namespace ft
 				};
 
 				/*
-				** @Brief : Requests that the vector capacity be at least enough to contain n elements.
-				*/
+				 ** @Brief : Requests that the vector capacity be at least enough to contain n elements.
+				 */
 				void reserve(size_type n)
 				{
 					size_type	newCapacity = capacity();
@@ -204,8 +211,6 @@ namespace ft
 						_capacity = newCapacity;
 					}
 				};
-
-				void shrink_to_fit();
 
 				/*
 				 ** @Brief : Returns a reference to the element at position n in the vector container.
@@ -246,12 +251,18 @@ namespace ft
 				/*
 				 ** @Brief : Returns a reference to the last element in the vector.
 				 */
-				reference back();
+				reference back()
+				{
+					return (*this->_data[_size - 1]);
+				};
 
 				/*
 				 ** @Brief : Returns a const_reference to the last element in the vector.
 				 */
-				const_reference back() const;
+				const_reference back() const
+				{
+					return (*this->_data[_size - 1]);
+				};
 
 				/*
 				 ** @Brief : 
@@ -288,9 +299,25 @@ namespace ft
 
 				template <class InputIterator>    void insert (iterator position, InputIterator first, InputIterator last);
 
-				iterator erase (iterator position);
+				iterator erase (iterator position)
+				{
+					return (erase(position, position + 1));
+				};
 
-				iterator erase (iterator first, iterator last);
+				iterator erase (iterator first, iterator last)
+				{
+					iterator	it = first;
+					int			length_to_delete = std::distance(first, last);
+					for (; last != end(); ++last; ++first) //equivalent to copy TODO checker si utilisation de copy n'est pas mieux
+						*first = *last;
+					while (length_to_delete)
+					{
+						_alloc.destroy(_data + _size);
+						length_to_delete--;
+						_size--;
+					}
+					return (it);
+				};
 
 				void swap (vector& x);
 
