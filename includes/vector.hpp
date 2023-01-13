@@ -2,6 +2,7 @@
 # define VECTOR_HPP
 
 # include <memory>
+# include <algorithm>
 
 namespace ft
 {
@@ -15,8 +16,8 @@ namespace ft
 				typedef	typename	allocator_type::const_reference					const_reference;
 				typedef	typename	allocator_type::pointer							pointer;
 				typedef	typename	allocator_type::const_pointer					const_pointer;
-				typedef				std::random_access_iterator_tag					iterator; //TODO changer std to ft
-				typedef				std::random_access_iterator_tag<const>			const_iterator; //TODO changer std to ft
+				typedef				ft::random_access_iterator						iterator; //TODO changer std to ft
+				typedef				ft::random_access_iterator<const>				const_iterator; //TODO changer std to ft
 				typedef				std::reverse_iterator<iterator>					reverse_iterator; //TODO changer std to ft
 				typedef				std::reverse_iterator<const_iterator>			const_reverse_iterator; //TODO changer std to ft
 				typedef				std::ptrdiff_t									difference_type;
@@ -233,8 +234,11 @@ namespace ft
 				*/
 				reference at(size_type n)
 				{
+					std::ostringstream	buffer;
+
+					buffer << "vector::at n (which is " << n << ") >= this->size() (which is " << _size << ")";
 					if (_size <= n)
-						throw std::out_of_range("vector::out_of_range");
+						throw std::out_of_range(buffer.str());
 					_data[n];
 				};
 
@@ -243,8 +247,11 @@ namespace ft
 				*/
 				const_reference at(size_type n) const
 				{
+					std::ostringstream	buffer;
+
+					buffer << "vector::at n (which is " << n << ") >= this->size() (which is " << _size << ")";
 					if (_size <= n)
-						throw std::out_of_range("vector::out_of_range");//TODO change message
+						throw std::out_of_range(buffer.str());//TODO change message
 					_data[n];
 				};
 
@@ -253,7 +260,7 @@ namespace ft
 				 */
 				reference front()
 				{
-					return (*this->_data);
+					return (*this->_data[0]);
 				};
 
 				/*
@@ -261,7 +268,7 @@ namespace ft
 				 */
 				const_reference front() const
 				{
-					return (*this->_data);
+					return (*this->_data[0]);
 				};
 
 				/*
@@ -295,6 +302,19 @@ namespace ft
 				{
 					return (this->_data);
 				};
+
+				template <class InputIterator>
+					void assign (InputIterator first, InputIterator last)
+					{
+						size_t	distance = std::distance(first, last);
+						if (capacity() < distance)
+							reserve(distance);
+						for (size_type i = 0; i < n; i++)
+						{
+							_alloc.construct(_data[i], first);
+							first++;
+						}
+					};
 
 				void assign (size_type n, const value_type& val)
 				{
