@@ -307,6 +307,7 @@ namespace ft
 					void assign (InputIterator first, InputIterator last)
 					{
 						size_t	distance = std::distance(first, last);
+						clear();
 						if (capacity() < distance)
 							reserve(distance);
 						for (size_type i = 0; i < n; i++)
@@ -318,6 +319,7 @@ namespace ft
 
 				void assign (size_type n, const value_type& val)
 				{
+					clear();
 					if (capacity() < n)
 						reserve(n);
 					for (size_type i = 0; i < n; i++)
@@ -362,7 +364,7 @@ namespace ft
 					iterator	it = first;
 					int			length_to_delete = std::distance(first, last);
 					//equivalent to copy TODO checker si utilisation de copy n'est pas mieux
-					for (; last != end(); ++last; ++first)
+					for (; last != end(); ++last, ++first)
 						*first = *last;
 					while (length_to_delete)
 					{
