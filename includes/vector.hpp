@@ -230,8 +230,8 @@ namespace ft
 				};
 
 				/*
-				** @Brief : Returns a reference to the element at position n in the vector.
-				*/
+				 ** @Brief : Returns a reference to the element at position n in the vector.
+				 */
 				reference at(size_type n)
 				{
 					std::ostringstream	buffer;
@@ -243,8 +243,8 @@ namespace ft
 				};
 
 				/*
-				** @Brief : Returns a const reference to the element at position n in the vector.
-				*/
+				 ** @Brief : Returns a const reference to the element at position n in the vector.
+				 */
 				const_reference at(size_type n) const
 				{
 					std::ostringstream	buffer;
@@ -288,7 +288,7 @@ namespace ft
 				};
 
 				/*
-				 ** @Brief : 
+				 ** @Brief : Returns a direct pointer to the memory array used internally by the vector to store its owned elements.
 				 */
 				value_type* data() 
 				{
@@ -296,7 +296,7 @@ namespace ft
 				};
 
 				/*
-				 ** @Brief : 
+				 ** @Brief : Returns a direct const pointer to the memory array used internally by the vector to store its owned elements.
 				 */
 				const value_type* data() const 
 				{
@@ -330,8 +330,8 @@ namespace ft
 				void push_back (const value_type& val);
 
 				/*
-				** @Brief : Removes the last element in the vector, effectively reducing the container size by one
-				*/
+				 ** @Brief : Removes the last element in the vector, effectively reducing the container size by one
+				 */
 				void pop_back()
 				{
 					if (_size != 0)
@@ -341,24 +341,45 @@ namespace ft
 					}
 				};
 
-				iterator insert(iterator position, const value_type& val);
+				iterator insert(iterator position, const value_type& val)
+				{
+					difference_type	index_pos = position - begin();
 
-				void insert (iterator position, size_type n, const value_type& val);
+					insert(position, 1, val);
+					return iterator(&_data[index_pos]);
+				};
+
+				void insert (iterator position, size_type n, const value_type& val)
+				{
+					difference_type			index_pos = position - begin();
+
+					if (n == 0)
+						return ;
+					if (_capacity < _size + n)
+						reserve(_size + n);
+					_size += n;
+					size_t	i = _size - 1;
+					for (int y = index_pos + n; index_pos < y; y--; i++)
+						_alloc.construct(_data[i], _data[y]);
+					for (; index_pos < index_pos + n; index_pos++)
+						_alloc.construct(_data[index_pos], val);
+
+				};
 
 				template <class InputIterator>
 					void insert (iterator position, InputIterator first, InputIterator last);
 
 				/*
-				** @Brief : Removes the element at pos
-				*/
+				 ** @Brief : Removes the element at pos
+				 */
 				iterator erase (iterator position)
 				{
 					return (erase(position, position + 1));
 				};
 
 				/*
-				** @Brief : Removes the elements in the range [first, last)
-				*/
+				 ** @Brief : Removes the elements in the range [first, last)
+				 */
 				iterator erase (iterator first, iterator last)
 				{
 					iterator	it = first;
@@ -376,8 +397,8 @@ namespace ft
 				};
 
 				/*
-				** @Brief : Exchanges the content of the container by the content of x, which is another vector object of the same type. Sizes may differ.
-				*/
+				 ** @Brief : Exchanges the content of the container by the content of x, which is another vector object of the same type. Sizes may differ.
+				 */
 				void swap (vector& x)
 				{
 					std::swap(_capacity, x._capacity);
@@ -386,8 +407,8 @@ namespace ft
 				}
 
 				/*
-				** @Brief: Removes all elements from the vector (which are destroyed), leaving the container with a size of 0.
-				*/
+				 ** @Brief: Removes all elements from the vector (which are destroyed), leaving the container with a size of 0.
+				 */
 				void clear()
 				{
 					while (_size)
