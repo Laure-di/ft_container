@@ -357,7 +357,8 @@ namespace ft
 						return ;
 					if (_capacity < _size + n)
 						reserve(_size + n);
-					_size += n;
+					else
+						_size += n;
 					size_t	i = _size - 1;
 					for (int y = index_pos + n; index_pos < y; y--; i++)
 						_alloc.construct(_data[i], _data[y]);
@@ -367,7 +368,30 @@ namespace ft
 				};
 
 				template <class InputIterator>
-					void insert (iterator position, InputIterator first, InputIterator last);
+					void insert (iterator position, InputIterator first, InputIterator last)
+					{
+						if (first == last)
+							return ;
+						if (first == end())
+						{
+							while (first++ != last)
+								push_back(*first);
+						}
+						else
+						{
+							difference_type	index_pos = position - begin();
+							size_t			length_insert = std::distance(first, begin);
+							size_t			previous_size - _size;
+						/*	if (_size + length_insert <= _capacity)
+								reserve(_size + length_insert);
+							else
+								_size += length_insert;*/
+							for (int i = 0; i < length_insert; i++, first++)
+								insert(position + i, 1, *first);
+						}
+
+
+					};
 
 				/*
 				 ** @Brief : Removes the element at pos
