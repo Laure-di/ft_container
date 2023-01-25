@@ -101,6 +101,11 @@ namespace ft
 				{
 					return *(*this + n);
 				};
+
+				operator	random_access_iterator<const T> const
+				{
+					return (random_access_iterator<const T>(_current);
+				}
 		};
 	template <typename T, typename U>
 		bool	operator==(const random_access_iterator<T> &x, const random_access_iterator<U> &y)

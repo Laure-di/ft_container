@@ -18,8 +18,8 @@ namespace ft
 				typedef	typename	allocator_type::const_pointer					const_pointer;
 				typedef				ft::random_access_iterator						iterator; //TODO changer std to ft
 				typedef				ft::random_access_iterator<const>				const_iterator; //TODO changer std to ft
-				typedef				std::reverse_iterator<iterator>					reverse_iterator; //TODO changer std to ft
-				typedef				std::reverse_iterator<const_iterator>			const_reverse_iterator; //TODO changer std to ft
+				typedef				ft::reverse_iterator<iterator>					reverse_iterator; //TODO changer std to ft
+				typedef				ft::reverse_iterator<const_iterator>			const_reverse_iterator; //TODO changer std to ft
 				typedef				std::ptrdiff_t									difference_type;
 				typedef				typename allocator_type::size_type				size_type;
 
@@ -57,14 +57,12 @@ namespace ft
 				 ** @Brief : Constructs a container with as many elements as the range [first,last), with each element constructed from its corresponding element in that range, in the same order.
 				 */
 				template <class InputIterator>
-					vector (InputIterator first, InputIterator last, const allocator_type& alloc = allocator_type()); /*TODO need assign method to do this constructor;*/
-
+					vector (InputIterator first, InputIterator last, const allocator_type& alloc = allocator_type());
 				/*
 				 ** @Brief : Constructs a container with a copy of each of the elements in x, in the same order.
 				 */
-				vector(const vector& x)
+				vector(const vector& x): _capacity(x.capacity())
 				{
-					*this = x; //TODO need assign method
 				};
 
 				/*
@@ -106,36 +104,34 @@ namespace ft
 				/*
 				 ** @Brief : rbegin points to the element right before the one that would be pointed to by member end. Returns a reverse random access iterator.
 				 */
-				reverse_iterator rbegin();
+				reverse_iterator rbegin()
+				{
+					return reverse_iterator(&_data[size]);
+				};
 
 				/*
 				 ** @Brief : rbegin points to the element right before the one that would be pointed to by member end. Returns a reverse random access iterator.
 				 */
-				const_reverse_iterator rbegin() const;
+				const_reverse_iterator rbegin() const
+				{
+					return const_reverse_iterator(&_data[size]);
+				};
 
 				/*
 				 ** @Brief : Returns a reverse iterator pointing to the theoretical element preceding the first element in the vector
 				 */
-				reverse_iterator rend();
+				reverse_iterator rend()
+				{
+					return reverse_iterator(_data);
+				};
 
 				/*
 				 ** @Brief : Returns a reverse iterator pointing to the theoretical element preceding the first element in the vector
 				 */
-				const_reverse_iterator rend() const;
-
-				const_iterator cbegin() const
+				const_reverse_iterator rend() const
 				{
-					return (const_iterator(_data));
+					return const_reverse_iterator(_data);
 				};
-
-				const_iterator cend() const
-				{
-					return (const_iterator(_data + _size));
-				};
-
-				const_reverse_iterator crbegin() const ;
-
-				const_reverse_iterator crend() const ;
 
 				/*
 				 ** @Brief : Returns the number of elements in the vector.
