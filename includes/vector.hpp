@@ -65,6 +65,14 @@ namespace ft
 				{
 				};
 
+				~vector()
+				{
+					for (size_t i = 0;i < _size; i++)
+						_alloc.destroy(_data + i);
+					_size = 0;
+					_alloc.deallocate(_data, _capacity);
+				}
+
 				/*
 				 ** @Brief : Copies all the elements from x into the container.
 				 */
@@ -152,13 +160,19 @@ namespace ft
 				/*
 				 ** @Brief : Resizes the container so that it contains n elements.
 				 */
-				void resize (size_type n, value_type val = value_type())
+				void resize (size_type n, value_type val = value_type()) //TODO check capacity??!!
 				{
 					if (n < _size)
-						//remove & destroy content beyond n
-					else if (_size < n && n < _capacity)
-						//content is expended
-					else if (_capacity < n)
+					{
+						for (size_type i = n; i < _size; i++)
+							_alloc.destroy(&_data[i]);
+					}
+					else
+					{
+						for (size_type i = _size; i < n; i++)
+							_alloc.construct(&_data[i], val);
+					}
+					_size = n;
 				};
 
 				/*
