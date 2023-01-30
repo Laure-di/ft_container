@@ -1,6 +1,9 @@
+#ifndef RANDOM_ACCESS_ITERATOR_HPP
+# define RANDOM_ACCESS_ITERATOR_HPP
+
 namespace ft
 {
-	template<T>
+	template<class T>
 		class random_access_iterator
 		{
 			/*
@@ -17,10 +20,10 @@ namespace ft
 			public:
 				random_access_iterator(void) : _current(NULL) {};
 				explicit random_access_iterator(pointer* ptr) : _current(ptr) {};
-				random_access_iterator(pointer* ptr) : _current(ptr) {};
-				random_access_iterator(const reference ptr)
+				//random_access_iterator(pointer* ptr) : _current(ptr) {};
+				random_access_iterator(reference ptr)
 				{
-					*this = x;
+					*this = ptr;
 				};
 				random_access_iterator(const random_access_iterator& ptr) : _current(ptr.base()){};
 				~random_access_iterator(){};
@@ -83,7 +86,7 @@ namespace ft
 				{
 					return (random_access_iterator(_current - n));
 				};
-				random_access_iteratori<T>	&operator-=(difference_type n)
+				random_access_iterator<T>	&operator-=(difference_type n)
 				{
 					_current -= n;
 					return (*this);
@@ -102,10 +105,10 @@ namespace ft
 					return *(*this + n);
 				};
 
-				operator	random_access_iterator<const T> const
+				/*operator	random_access_iterator<const T> const
 				{
 					return (random_access_iterator<const T>(_current);
-				}
+				}*/ //TODO a finir
 		};
 	template <typename T, typename U>
 		bool	operator==(const random_access_iterator<T> &x, const random_access_iterator<U> &y)
@@ -148,3 +151,4 @@ namespace ft
 			return (random_access_iterator<T>(x.base() + n));
 		};
 };
+#endif

@@ -1,6 +1,8 @@
 #ifndef VECTOR_HPP
 # define VECTOR_HPP
 
+# include "random_access_iterator.hpp"
+# include "reverse_iterator.hpp"
 # include <memory>
 # include <algorithm>
 
@@ -16,10 +18,10 @@ namespace ft
 				typedef	typename	allocator_type::const_reference					const_reference;
 				typedef	typename	allocator_type::pointer							pointer;
 				typedef	typename	allocator_type::const_pointer					const_pointer;
-				typedef				ft::random_access_iterator						iterator; //TODO changer std to ft
-				typedef				ft::random_access_iterator<const>				const_iterator; //TODO changer std to ft
-				typedef				ft::reverse_iterator<iterator>					reverse_iterator; //TODO changer std to ft
-				typedef				ft::reverse_iterator<const_iterator>			const_reverse_iterator; //TODO changer std to ft
+				typedef				ft::random_access_iterator						iterator;
+				typedef				ft::random_access_iterator<const>				const_iterator;
+				typedef				ft::reverse_iterator<iterator>					reverse_iterator;
+				typedef				ft::reverse_iterator<const_iterator>			const_reverse_iterator;
 				typedef				std::ptrdiff_t									difference_type;
 				typedef				typename allocator_type::size_type				size_type;
 
@@ -114,7 +116,7 @@ namespace ft
 				 */
 				reverse_iterator rbegin()
 				{
-					return reverse_iterator(&_data[size]);
+					return reverse_iterator(&_data[_size]);
 				};
 
 				/*
@@ -122,7 +124,7 @@ namespace ft
 				 */
 				const_reverse_iterator rbegin() const
 				{
-					return const_reverse_iterator(&_data[size]);
+					return const_reverse_iterator(&_data[_size]);
 				};
 
 				/*

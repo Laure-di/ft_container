@@ -1,7 +1,11 @@
+#ifndef REVERSE_ITERATOR_HPP
+# define REVERSE_ITERATOR_HPP
+
+#include "iterator_traits.hpp"
 /*
  ** @Brief : source https://cs.brown.edu/people/jwicks/libstdc++/html_user/stl__iterator_8h-source.html
  */
-namespace std {
+namespace ft {
 	template <class Iterator>
 		class reverse_iterator : public iterator<typename iterator_traits<Iterator>::iterator_category,
 		typename iterator_traits<Iterator>::value_type,
@@ -21,7 +25,7 @@ namespace std {
 				 ** @Brief : constuctors & destructor
 				 */
 				reverse_iterator(): _current(0){};
-				explicit reverse_iterator(Iterator x) _current(x){};
+				explicit reverse_iterator(Iterator x): _current(x){};
 				template <class U>
 					reverse_iterator(const reverse_iterator<U>& u):_current(u>base()){};
 
@@ -98,9 +102,9 @@ namespace std {
 					return *(*this + n);
 				};
 
-				operator			reverse_iterator<const T>() const
+				operator			reverse_iterator<const Iterator>() const
 				{
-					return reverse_iterator<const T>(_current);
+					return reverse_iterator<const Iterator>(_current);
 				}
 		};
 	template <class Iterator>
@@ -150,4 +154,6 @@ namespace std {
 			return reverse_iterator<Iterator>(x.base() - n);
 		};
 }
+
+#endif
 
