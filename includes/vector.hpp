@@ -37,12 +37,12 @@ namespace ft
 				/*
 				 ** @Brief : Constructs an empty container, with no elements.
 				 */
-				explicit vector (const allocator_type& alloc = allocator_type()) : _capacity(0), _size(0), _data(NULL), _alloc(alloc){};
+				explicit vector(const allocator_type& alloc = allocator_type()) : _capacity(0), _size(0), _data(NULL), _alloc(alloc){};
 
 				/*
 				 ** @Brief : Constructs a container with n elements. Each element is a copy of val.
 				 */
-				explicit vector (size_type n, const value_type& val = value_type(), const allocator_type& alloc = allocator_type())
+				explicit vector(size_type n, const value_type& val = value_type(), const allocator_type& alloc = allocator_type())
 				{
 					_alloc = alloc;
 					_data = _alloc.allocate(n);
@@ -76,7 +76,25 @@ namespace ft
 				/*
 				 ** @Brief : Copies all the elements from x into the container.
 				 */
-				vector& operator=(const vector& x); //TODO need assign method to do this constructor;
+				vector& operator=(const vector& x)
+				{
+					if (*this != x)
+					{
+						clear();
+						if (_capacity)
+							_allo.deallocate(_data, _capacity);
+						_size = x.size();
+						_alloc = x.get_allocator();//TODO look for clarification not sure about that
+							//The container preserves its current allocator, which is used to allocate storage in case of reallocation.
+						_capacity = _size;
+						if (_capacity)
+							_alloc.allocate(_capacity);
+						for (size_t i = 0; i < _size; i++)
+							_alloc.construct(&_base[i], x[i]);
+					}
+					return (*this);
+				};
+
 				/*
 				 ** @Brief : Returns an iterator pointing to the first element in the vector.
 				 */
