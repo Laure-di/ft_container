@@ -1,10 +1,13 @@
 #ifndef RANDOM_ACCESS_ITERATOR_HPP
 # define RANDOM_ACCESS_ITERATOR_HPP
 
+# include "iterator.hpp"
+# include "iterator_traits.hpp"
+
 namespace ft
 {
 	template<class T>
-		class random_access_iterator
+		class random_access_iterator : public ft::iterator<ft::random_access_iterator_tag, T>
 		{
 			/*
 			 ** @Source : https://en.cppreference.com/w/cpp/iterator/iterator_traits
@@ -16,16 +19,11 @@ namespace ft
 				typedef				T&									reference;
 				typedef				std::random_access_iterator_tag		iterator_category;
 			private:
-				T														_current;
+				pointer														_current;
 			public:
 				random_access_iterator(void) : _current(NULL) {};
-				explicit random_access_iterator(pointer* ptr) : _current(ptr) {};
-				//random_access_iterator(pointer* ptr) : _current(ptr) {};
-				random_access_iterator(reference ptr)
-				{
-					*this = ptr;
-				};
-				random_access_iterator(const random_access_iterator& ptr) : _current(ptr.base()){};
+				random_access_iterator(pointer ptr) : _current(ptr) {};
+				//random_access_iterator(const random_access_iterator& ptr) : _current(ptr.base()){};
 				~random_access_iterator(){};
 
 				random_access_iterator<T>	&operator=(const random_access_iterator& ptr)
@@ -35,11 +33,11 @@ namespace ft
 					return (*this);
 				};
 
-				random_access_iterator<T>	base(void)const
+				pointer						base(void)const
 				{
 					return _current;
 				};
-				random_access_iterator<T> base(void)
+				pointer						base(void)
 				{
 					return _current;
 				};
@@ -91,13 +89,13 @@ namespace ft
 					_current -= n;
 					return (*this);
 				};
-				difference_type			operator-(const random_access_iterator ptr)
+				difference_type			operator-(const random_access_iterator& ptr) const
 				{
-					return(random_access_iterator(_current - ptr->base()));
+					return(_current - ptr.base());
 				};
-				difference_type			operator+(const random_access_iterator ptr)
+				difference_type			operator+(const random_access_iterator& ptr) const
 				{
-					return(random_access_iterator(_current + ptr->base()));
+					return(_current + ptr.base());
 				};
 
 				reference	operator[](difference_type n)

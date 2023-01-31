@@ -1,10 +1,12 @@
 #ifndef VECTOR_HPP
 # define VECTOR_HPP
 
-# include "random_access_iterator.hpp"
-# include "reverse_iterator.hpp"
 # include <memory>
 # include <algorithm>
+# include <sstream>
+# include "iterator.hpp"
+# include "reverse_iterator.hpp"
+# include "random_access_iterator.hpp"
 
 namespace ft
 {
@@ -18,9 +20,9 @@ namespace ft
 				typedef	typename	allocator_type::const_reference					const_reference;
 				typedef	typename	allocator_type::pointer							pointer;
 				typedef	typename	allocator_type::const_pointer					const_pointer;
-				typedef				ft::random_access_iterator						iterator;
-				typedef				ft::random_access_iterator<const>				const_iterator;
-				typedef				ft::reverse_iterator<iterator>					reverse_iterator;
+				typedef typename	ft::random_access_iterator<T>						iterator;
+				typedef	typename	ft::random_access_iterator<const T>					const_iterator;
+				typedef				ft::reverse_iterator<iterator>				reverse_iterator;
 				typedef				ft::reverse_iterator<const_iterator>			const_reverse_iterator;
 				typedef				std::ptrdiff_t									difference_type;
 				typedef				typename allocator_type::size_type				size_type;
@@ -31,10 +33,6 @@ namespace ft
 				pointer			_data;
 				allocator_type	_alloc;
 			public:
-				/*
-				 ** @Brief : constructor
-				 */
-				vector():_capacity(0), _size(0), _data(NULL), _alloc(allocator_type()){};
 
 				/*
 				 ** @Brief : Constructs an empty container, with no elements.
@@ -49,9 +47,9 @@ namespace ft
 					_alloc = alloc;
 					_data = _alloc.allocate(n);
 					_size = n;
-					int	i = 0;
+					size_t	i = 0;
 					while (i < n)
-						_alloc.construct(_data[i++], val);
+						_alloc.construct(&_data[i++], val);
 
 				};//TODO need assign method to do this constructor;
 
@@ -63,7 +61,7 @@ namespace ft
 				/*
 				 ** @Brief : Constructs a container with a copy of each of the elements in x, in the same order.
 				 */
-				vector(const vector& x): _capacity(x.capacity())
+				vector(const vector& x): _capacity(x._capacity), _size(x._size), _data(x._data), _alloc(x._alloc)
 				{
 				};
 
@@ -322,7 +320,7 @@ namespace ft
 						clear();
 						if (capacity() < distance)
 							reserve(distance);
-						for (size_type i = 0; i < n; i++)
+						for (size_type i = 0; i < distance; i++)
 						{
 							_alloc.construct(_data[i], first);
 							first++;
@@ -372,14 +370,14 @@ namespace ft
 					else
 						_size += n;
 					size_t	i = _size - 1;
-					for (int y = index_pos + n; index_pos < y; y--; i++)
-						_alloc.construct(_data[i], _data[y]);
-					for (; index_pos < index_pos + n; index_pos++)
-						_alloc.construct(_data[index_pos], val);
+					for (int y = index_pos + n; index_pos < y; y--, i++)
+						_alloc.construct(&_data[i], _data[y]);
+					for (; (size_t)index_pos < (size_t)index_pos + n; index_pos++) //TODO check syntaxe
+						_alloc.construct(&_data[index_pos], val);
 
 				};
 
-				template <class InputIterator>
+				/*template <class InputIterator>
 					void insert (iterator position, InputIterator first, InputIterator last)
 					{
 						if (first == last)
@@ -391,19 +389,19 @@ namespace ft
 						}
 						else
 						{
-							difference_type	index_pos = position - begin();
-							size_t			length_insert = std::distance(first, begin);
-							size_t			previous_size - _size;
-						/*	if (_size + length_insert <= _capacity)
+							//difference_type	index_pos = position - begin();
+							size_t			length_insert = std::distance(first, begin());
+							//size_t			previous_size = _size;
+							if (_size + length_insert <= _capacity)
 								reserve(_size + length_insert);
 							else
-								_size += length_insert;*/
-							for (int i = 0; i < length_insert; i++, first++)
+								_size += length_insert;
+							for (size_t i = 0; i < length_insert; i++, first++)
 								insert(position + i, 1, *first);
 						}
 
 
-					};
+					};*/
 
 				/*
 				 ** @Brief : Removes the element at pos
@@ -493,7 +491,7 @@ namespace ft
 	template <class T, class Alloc>
 		bool operator>(const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
 		{
-			return (!(lhs < rhs)):
+			return (!(lhs < rhs));
 		};
 
 	template <class T, class Alloc>
