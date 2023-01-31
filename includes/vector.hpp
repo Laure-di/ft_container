@@ -82,7 +82,7 @@ namespace ft
 					{
 						clear();
 						if (_capacity)
-							_allo.deallocate(_data, _capacity);
+							_alloc.deallocate(_data, _capacity);
 						_size = x.size();
 						_alloc = x.get_allocator();//TODO look for clarification not sure about that
 							//The container preserves its current allocator, which is used to allocate storage in case of reallocation.
@@ -90,7 +90,7 @@ namespace ft
 						if (_capacity)
 							_alloc.allocate(_capacity);
 						for (size_t i = 0; i < _size; i++)
-							_alloc.construct(&_base[i], x[i]);
+							_alloc.construct(&_data[i], x[i]);
 					}
 					return (*this);
 				};
