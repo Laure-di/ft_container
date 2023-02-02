@@ -355,7 +355,13 @@ namespace ft
 					_size = n;
 				}
 
-				void push_back (const value_type& val);
+				void push_back (const value_type& val)
+				{
+					if (_size + 1 > _capacity)
+						reserve(_size + 1);
+					_alloc.construct(&_data[++_size], val);
+					_size += 1;
+				};
 
 				/*
 				 ** @Brief : Removes the last element in the vector, effectively reducing the container size by one

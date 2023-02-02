@@ -12,14 +12,19 @@ namespace ft
 			/*
 			 ** @Source : https://en.cppreference.com/w/cpp/iterator/iterator_traits
 			 */
+			private:
+				typedef ft::iterator<ft::random_access_iterator_tag, T>		_traits;
+
 			public:
-				typedef				T									value_type;
-				typedef typename	std::ptrdiff_t						difference_type;
-				typedef				T*									pointer;
-				typedef				T&									reference;
-				typedef				std::random_access_iterator_tag		iterator_category;
+				typedef typename	_traits::value_type					value_type;
+				typedef typename	_traits::difference_type			difference_type;
+				typedef	typename	_traits::pointer					pointer;
+				typedef typename	_traits::reference					reference;
+				typedef	typename			_traits::iterator_category			iterator_category;
+
 			private:
 				pointer														_current;
+
 			public:
 				random_access_iterator(void) : _current(NULL) {};
 				random_access_iterator(pointer ptr) : _current(ptr) {};

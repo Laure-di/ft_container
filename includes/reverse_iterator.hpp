@@ -11,14 +11,16 @@ namespace ft {
 	template <class Iterator>
 		class reverse_iterator : public ft::iterator<typename ft::iterator_traits<Iterator>::iterator_category, Iterator> {
 			protected:
-				Iterator														_current;
-				typedef ft::iterator_traits<Iterator>								_iterator_traits;
+				typedef ft::iterator_traits<Iterator>							_iterator_traits;
+
 			public:
-				typedef Iterator												iterator_type;
+				typedef Iterator										iterator_type;
 				typedef typename _iterator_traits::iterator_category	iterator_category;
 				typedef typename _iterator_traits::difference_type		difference_type;
 				typedef typename _iterator_traits::reference			reference;
 				typedef typename _iterator_traits::pointer				pointer;
+			protected:
+				Iterator														_current;
 
 				/*
 				 ** @Brief : constuctors & destructor
