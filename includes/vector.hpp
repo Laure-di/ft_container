@@ -365,12 +365,8 @@ namespace ft
 					{
 						size_t	distance = ft::distance(first, last);
 						clear();
-						std::cout << distance << std::endl;
 						if (capacity() < distance)
-						{
-							std::cout << "reserve " << distance << std::endl;
 							reserve(distance);
-						}
 						while (first != last)
 						{
 							push_back(*first);
