@@ -128,7 +128,7 @@ namespace ft
 			return !(x.base() == y.base());
 		};
 	template <typename T, typename U>
-		bool	operator>(const random_access_iterator<T> &x, random_access_iterator<T> &y)
+		bool	operator>(const random_access_iterator<T> &x, random_access_iterator<U> &y)
 		{
 			return (y.base() < x.base());
 		};
