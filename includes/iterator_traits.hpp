@@ -2,6 +2,7 @@
 # define ITERATOR_TRAITS_HPP
 
 # include <cstddef>
+# include "random_access_iterator.hpp"
 # include "iterator.hpp"
 
 namespace ft
@@ -35,6 +36,17 @@ namespace ft
 			typedef const T&								reference;
 			typedef std::random_access_iterator_tag			iterator_category;
 		};
+
+	template <typename Iterator>
+		typename ft::iterator_traits<Iterator>::difference_type distance(Iterator  first, Iterator last)
+		{
+			typename ft::iterator_traits<Iterator>::difference_type	distance;
+
+			for (distance = 0; first != last; ++first, ++distance)
+			{;}
+
+			return distance;
+		}
 
 }
 

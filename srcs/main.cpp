@@ -1,5 +1,9 @@
+#include "vector.hpp"
+#include "vector_test.cpp"
+
 int		main(void)
 {
-	main_vector();
+	//constructor();
+	assign();
 	return 0;
 }
