@@ -3,7 +3,7 @@
 
 int		main(void)
 {
-	//constructor();
+	constructor();
 	assign();
 	return 0;
 }

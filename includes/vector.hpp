@@ -363,10 +363,7 @@ namespace ft
 				template <class InputIterator>
 					void assign (InputIterator first, InputIterator last, typename enable_if<!is_integral<InputIterator>::value, InputIterator>::type* = 0)
 					{
-						size_t	distance = ft::distance(first, last);
 						clear();
-						if (capacity() < distance)
-							reserve(distance);
 						while (first != last)
 						{
 							push_back(*first);
@@ -470,9 +467,10 @@ namespace ft
 				iterator erase (iterator first, iterator last)
 				{
 					iterator	it = first;
+					iterator	end = end();
 					int			length_to_delete = ft::distance(first, last);
 					//equivalent to copy TODO checker si utilisation de copy n'est pas mieux
-					for (; last != end(); ++last, ++first)
+					for (; last != end; ++last, ++first)
 						*first = *last;
 					while (length_to_delete)
 					{
@@ -554,7 +552,7 @@ namespace ft
 		void swap (vector<T,Alloc>& x, vector<T,Alloc>& y)
 		{
 			x.swap(y);
-		};
+		};   
 };
 
 #endif
