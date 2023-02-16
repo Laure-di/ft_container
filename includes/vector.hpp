@@ -54,6 +54,7 @@ namespace ft
 					_alloc = alloc;
 					_data = _alloc.allocate(n);
 					_size = n;
+					_capacity = n; //TODO check if capacity allright
 					size_t	i = 0;
 					while (i < n)
 						_alloc.construct(&_data[i++], val);
