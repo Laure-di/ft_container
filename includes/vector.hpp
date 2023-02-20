@@ -37,9 +37,9 @@ namespace ft
 				size_type		_size;
 				pointer			_data;
 				allocator_type	_alloc;
-				//	protected:
-				//		size_t	
 			public:
+
+				//vector(void): _alloc(allocator_type()), _capacity(0), _size(0), _data(NULL){}
 
 				/*
 				 ** @Brief : Constructs an empty container, with no elements.
@@ -52,14 +52,12 @@ namespace ft
 				explicit vector(size_type n, const value_type& val = value_type(), const allocator_type& alloc = allocator_type())
 				{
 					_alloc = alloc;
-					_data = _alloc.allocate(n);
-					_size = n;
-					_capacity = n; //TODO check if capacity allright
-					size_t	i = 0;
-					while (i < n)
-						_alloc.construct(&_data[i++], val);
+					_size = 0;
+					_capacity = 0;
+					_data = NULL;
+					assign(n, val);
 
-				};//TODO need assign method to do this constructor;
+				}//TODO need assign method to do this constructor;
 
 				/*
 				 ** @Brief : Constructs a container with as many elements as the range [first,last), with each element constructed from its corresponding element in that range, in the same order.
@@ -68,17 +66,12 @@ namespace ft
 					vector (InputIterator first, InputIterator last, const allocator_type& alloc = allocator_type(), typename enable_if<!is_integral<InputIterator>::value, InputIterator>::type* = 0)
 					{
 						_alloc = alloc;
-						difference_type n= ft::distance(first, last); //TODO reimplement distance
-						_size = n;
-						_capacity = _size;
-						_data = _alloc.allocate(_size);
-						for (size_t i = 0; i < _size; i++)
-						{
-							_alloc.construct(_data + i, *first);
-							first++;
-						}
-
+						_size = 0;
+						_capacity = 0;
+						_data = NULL;
+						assign(first, last);
 					};
+
 				/*
 				 ** @Brief : Constructs a container with a copy of each of the elements in x, in the same order.
 				 */
@@ -96,9 +89,6 @@ namespace ft
 
 				~vector()
 				{
-					/*for (size_t i = 0;i < _size; i++)
-					  _alloc.destroy(_data + i);
-					  _size = 0;*/
 					clear();
 					if (_capacity)
 						_alloc.deallocate(_data, _capacity);
@@ -209,6 +199,13 @@ namespace ft
 				 */
 				void resize (size_type n, value_type val = value_type()) //TODO check capacity??!!
 				{
+					if (max_size() < n)
+						throw (std::length_error("vector::capacity"));
+					if (_size == 0)
+					{
+						reserve(n);
+						_size = 0;
+					}
 					if (n < _size)
 					{
 						for (size_type i = n; i < _size; i++)
@@ -245,20 +242,21 @@ namespace ft
 				 */
 				void reserve(size_type n)
 				{
-					size_type	newCapacity = capacity();
-					while (newCapacity < n)
+					size_type	new_capacity = computeNewCapacity(n);
+			/*	while (newCapacity < n)
 					{
 						if (newCapacity == 0)
 							newCapacity = 1;
 						else
 							newCapacity *= 2;
-					}
-					if (max_size() < newCapacity)
+					}*/
+
+					if (max_size() < new_capacity)
 						throw (std::length_error("vector::reserve"));//TODO check erreur message
-					if (capacity() < newCapacity)
+					if (capacity() < new_capacity)
 					{
 						pointer		newData = NULL;
-						newData = _alloc.allocate(newCapacity);
+						newData = _alloc.allocate(new_capacity);
 						for (size_type i = 0; i < size(); i++)
 						{
 							_alloc.construct(&newData[i], _data[i]);
@@ -267,7 +265,7 @@ namespace ft
 						if (_capacity)
 							_alloc.deallocate(_data, capacity());
 						_data = newData;
-						_capacity = newCapacity;
+						_capacity = new_capacity;
 					}
 				};
 
@@ -412,19 +410,26 @@ namespace ft
 
 				void insert(iterator position, size_type n, const value_type& val)
 				{
-					difference_type			index_pos = position - begin();
+					//difference_type			index_pos = position - begin();
+					(void)val;
+					(void)position;
 
 					if (n == 0)
 						return ;
 					if (_capacity < _size + n)
-						reserve(_size + n);
+					{
+						pointer	newData = NULL;
+						(void)newData;
+					}
 					else
+					{
 						_size += n;
-					size_t	i = _size - 1;
+					}
+					/*size_t	i = _size - 1;
 					for (int y = index_pos + n; index_pos < y; y--, i++)
 						_alloc.construct(&_data[i], _data[y]);
 					for (; (size_t)index_pos < (size_t)index_pos + n; index_pos++) //TODO check syntaxe
-						_alloc.construct(&_data[index_pos], val);
+						_alloc.construct(&_data[index_pos], val);*/
 
 				};
 
@@ -508,6 +513,26 @@ namespace ft
 				{
 					return (_alloc);
 				};
+
+			protected:
+
+				size_t		computeNewCapacity(size_t size)
+				{
+					if (max_size() < size)
+						throw (std::length_error("vector::capacity"));
+					size_t	new_capacity = capacity();
+					while (new_capacity < size)
+					{
+						if (new_capacity == 0)
+							new_capacity = 1;
+						else if (new_capacity * 2 < max_size())
+							new_capacity *= 2;
+						else
+							return max_size();
+
+					}
+					return new_capacity;
+				}
 
 		};
 

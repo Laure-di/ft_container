@@ -1,0 +1,205 @@
+std
+-----------------Test of constructor of vector---------------
+---vector (const allocator_type& alloc = allocator_type())---
+VECTOR -----------
+size 0
+capacity 0
+content
+
+
+VECTOR -----------
+size 0
+capacity 0
+content
+
+
+VECTOR -----------
+size 0
+capacity 0
+content
+
+
+VECTOR -----------
+size 0
+capacity 0
+content
+
+
+---vector (size_type n, const value_type& val = value_type(), const allocator_type& alloc = allocator_type())---
+VECTOR -----------
+size 8
+capacity 8
+content
+100 100 100 100 8 8 8 8 
+
+VECTOR -----------
+size 20
+capacity 20
+content
+container container container container container container container container container container container container container container container container container container container container 
+
+VECTOR -----------
+size 6
+capacity 6
+content
+c c c c c c 
+
+VECTOR -----------
+size 5
+capacity 5
+content
+3.14 3.14 3.14 3.14 3.14 
+
+---vector (InputIterator first, InputIterator last, const allocator_type& alloc = allocator_type())--
+VECTOR -----------
+size 8
+capacity 8
+content
+100 100 100 100 8 8 8 8 
+
+VECTOR -----------
+size 20
+capacity 20
+content
+container container container container container container container container container container container container container container container container container container container container 
+
+VECTOR -----------
+size 6
+capacity 6
+content
+c c c c c c 
+
+VECTOR -----------
+size 5
+capacity 5
+content
+3.14 3.14 3.14 3.14 3.14 
+
+---vector (const vector& x)---
+VECTOR -----------
+size 8
+capacity 8
+content
+100 100 100 100 8 8 8 8 
+
+VECTOR -----------
+size 20
+capacity 20
+content
+container container container container container container container container container container container container container container container container container container container container 
+
+VECTOR -----------
+size 6
+capacity 6
+content
+c c c c c c 
+
+VECTOR -----------
+size 5
+capacity 5
+content
+3.14 3.14 3.14 3.14 3.14 
+
+-------------Test of copy constructor of vector--------------
+VECTOR -----------
+size 8
+capacity 8
+content
+100 100 100 100 8 8 8 8 
+
+VECTOR -----------
+size 0
+capacity 6
+content
+
+
+0x600001809140 address of vct
+0x600001809120 address of vct_two
+0x600001809180 address of vct_three
+0x6000018091a0 address of vct_four
+
+1 VECTOR -----------
+size 5
+capacity 7
+content
+53 53 53 53 53 
+
+2 VECTOR -----------
+size 3
+capacity 7
+content
+21 18 15 
+
+3 VECTOR -----------
+size 7
+capacity 7
+content
+21 18 15 12 9 6 3 
+
+4 VECTOR -----------
+size 6
+capacity 6
+content
+84 84 84 84 84 84 
+
+-----------------reserve test-----------------
+VECTOR -----------
+size 0
+capacity 64
+content
+
+
+VECTOR -----------
+size 0
+capacity 64
+content
+
+
+VECTOR -----------
+size 0
+capacity 64
+content
+
+
+VECTOR -----------
+size 0
+capacity 64
+content
+
+
+VECTOR -----------
+size 0
+capacity 65
+content
+
+
+VECTOR -----------
+size 0
+capacity 79
+content
+
+
+VECTOR -----------
+size 2
+capacity 2
+content
+12 12 
+
+VECTOR -----------
+size 2
+capacity 32
+content
+12 12 
+
+VECTOR -----------
+size 2
+capacity 48
+content
+12 12 
+
+VECTOR -----------
+size 2
+capacity 48
+content
+12 12 
+

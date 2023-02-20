@@ -5,5 +5,8 @@ int		main(void)
 {
 	constructor();
 	assign();
+	//insert();
+	reserve();
+	resize();
 	return 0;
 }
