@@ -201,11 +201,6 @@ namespace ft
 				{
 					if (max_size() < n)
 						throw (std::length_error("vector::capacity"));
-					if (_size == 0)
-					{
-						reserve(n);
-						_size = 0;
-					}
 					if (n < _size)
 					{
 						for (size_type i = n; i < _size; i++)
@@ -213,8 +208,21 @@ namespace ft
 					}
 					else
 					{
-						for (size_type i = _size; i < n; i++)
-							_alloc.construct(&_data[i], val);
+						size_t	new_capacity = computeNewCapacity(n);
+						pointer	new_data = NULL;
+						new_data = _alloc.allocate(new_capacity);
+						for (size_type i = 0; i < n; i++)
+						{
+							if (i < _size)
+								_alloc.construct(&new_data[i], _data[i]);
+							else
+								_alloc.construct(&new_data[i], val);
+						}
+						clear();
+						if (_capacity)
+							_alloc.deallocate(_data, _capacity);
+						_data = new_data;
+						_capacity = new_capacity;
 					}
 					_size = n;
 				};
@@ -410,32 +418,61 @@ namespace ft
 
 				void insert(iterator position, size_type n, const value_type& val)
 				{
-					//difference_type			index_pos = position - begin();
-					(void)val;
-					(void)position;
 
 					if (n == 0)
 						return ;
+					size_t	first_insertion = position - begin();
+					size_t	new_size = _size + n;
+					std::cout << "value of first_insertion " << first_insertion << std::endl;
 					if (_capacity < _size + n)
 					{
-						pointer	newData = NULL;
-						(void)newData;
+						size_t	new_capacity = computeNewCapacity(_size + n);
+						pointer	new_data = _alloc.allocate(new_capacity);
+						for (size_t i = 0; i < first_insertion; i++)
+							_alloc.construct(&new_data[i], _data[i]);
+						for (size_t i = first_insertion; i < first_insertion + n; i++)
+							_alloc.construct(&new_data[i], val);
+						for (size_t i = first_insertion + n, y = first_insertion; i < _size + n; i++, y++)
+						{
+						/*	std::cout << "value of y : " << y << std::endl;
+							std::cout << "value of i : " << i << std::endl;
+							std::cout << "value of _data[y] : " << _data[y] << std::endl;*/
+							_alloc.construct(&new_data[i], _data[y]);
+						//	std::cout << "value of new_data[i] : " << new_data[i] << std::endl;
+						}
+						clear();
+						if (_capacity)
+							_alloc.deallocate(_data, _capacity);
+						_capacity = new_capacity;
+						_data = new_data;
 					}
 					else
 					{
-						_size += n;
+						for (size_t i = first_insertion, y = first_insertion + n; y < new_size; i++, y++)
+						{
+							std::cout << "value of new_size : " << y << std::endl;
+							std::cout << "value of _data[i] : " << _data[i] << std::endl;
+							_alloc.construct(&_data[y], _data[i]);
+							std::cout << "value of _data[new_size] : " << _data[y] << std::endl;
+						}
+						for (size_t i = first_insertion; i < first_insertion + n; i++)
+						{
+							std::cout << "value of val : " << val << std::endl;
+							std::cout << "value of insert : " << i << std::endl;
+							//_alloc.destroy(_data + i);
+							_alloc.construct(&_data[i], val);
+							std::cout << "value of _data[i] " << _data[i] << std::endl;
+						}
 					}
-					/*size_t	i = _size - 1;
-					for (int y = index_pos + n; index_pos < y; y--, i++)
-						_alloc.construct(&_data[i], _data[y]);
-					for (; (size_t)index_pos < (size_t)index_pos + n; index_pos++) //TODO check syntaxe
-						_alloc.construct(&_data[index_pos], val);*/
-
+					_size = new_size;
+					std::cout << "value of n " << n << std::endl;
+					std::cout << "size " << _size << std::endl;
 				};
 
 				template <class InputIterator>
 					void insert (iterator position, typename ft::enable_if<!ft::is_integral<InputIterator>::value, InputIterator>::type first, InputIterator last)
 					{
+						std::cout << "Insert iterator" << std::endl;
 						if (first == last)
 							return ;
 						/*if (first == end())
@@ -448,10 +485,10 @@ namespace ft
 						//difference_type	index_pos = position - begin();
 						size_t			length_insert = ft::distance(begin(), position);
 						//size_t			previous_size = _size;
-						if (_size + length_insert <= _capacity)
+						/*if (_size + length_insert <= _capacity)
 							reserve(_size + length_insert);
 						else
-							_size += length_insert;
+							_size += length_insert;*/
 						for (size_t i = 0; i < length_insert; i++, first++)
 							insert(position + i, 1, *first);
 						//	}
