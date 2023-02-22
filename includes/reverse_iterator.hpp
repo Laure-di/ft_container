@@ -52,7 +52,9 @@ namespace ft {
 
 				pointer			operator->() const
 				{
-					return (&(operator*()));
+					iterator_type	tmp = _current;
+					_current--;
+					return (tmp.operator->());
 				};
 
 				reverse_iterator&	operator++()

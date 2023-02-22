@@ -125,32 +125,41 @@ void	insert(void)
 
 		for (unsigned long int i = 0; i < vct.size(); ++i)
 		vct[i] = (vct.size() - i) * 3;
+	std::cout << "Result of vct: loop insertion" << std::endl;
 	std::cout << vct << std::endl;
 
 
 	vct2.insert(vct2.end(), 42);
+	std::cout << "Result of vct2 : insert(vct2.end(), 2)" << std::endl;
 	std::cout << vct2 << std::endl;
 	vct2.insert(vct2.begin(), 2, 21);
+	std::cout << "Result of vtc2: insert(vtc2.begin(), 2, 21)" << std::endl;
 	std::cout << vct2 << std::endl;
 
 	vct2.insert(vct2.end() - 2, 42);
+	std::cout << "Result of vct 2: insert(vct2.end() - 2, 42)" << std::endl;
 	std::cout << vct2 << std::endl;
 
 	vct2.insert(vct2.end(), 2, 84);
+	std::cout << "Result of vct2: insert(vct2.end(), 2, 84) " << std::endl;
 	std::cout << vct2 << std::endl;
 
 	vct2.resize(4);
+	std::cout << "Result of vtc2 : resize(4) " << std::endl;
 	std::cout << vct2 << std::endl;
 
 	vct2.insert(vct2.begin() + 2, vct.begin(), vct.end());
 	vct.clear();
+	std::cout << "Result of vct2: insert(vct2.begin(), vct.begin(), vct.end())" << std::endl;
 	std::cout << vct2 << std::endl;
 
+	std::cout << "Result of vct: clear " << std::endl;
 	std::cout << vct << std::endl;
 
 	for (int i = 0; i < 5; ++i)
 		vct3.insert(vct3.end(), i);
 	vct3.insert(vct3.begin() + 1, 2, 111);
+	std::cout << "Result of vct3i before it's empty : insert(vct3.end(), i)(1-5) et insert(vct3.begin() + 1, 2, 111)" << std::endl;
 	std::cout << vct3 << std::endl;
 }
 

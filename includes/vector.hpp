@@ -99,18 +99,18 @@ namespace ft
 				 */
 				vector& operator=(const vector& x)
 				{
-						clear();
-						if (_capacity)
-							_alloc.deallocate(_data, _capacity);
-						_size = x.size();
-						_alloc = x.get_allocator();//TODO look for clarification not sure about that
-												   //The container preserves its current allocator, which is used to allocate storage in case of reallocation.
-						_capacity = _size;
-						if (_capacity)
-							_data = _alloc.allocate(_capacity);
-						const_iterator	it = x.begin();
-						for (size_t i = 0; i < _size; i++)
-							_alloc.construct(_data + i, *it++);
+					clear();
+					if (_capacity)
+						_alloc.deallocate(_data, _capacity);
+					_size = x.size();
+					_alloc = x.get_allocator();//TODO look for clarification not sure about that
+											   //The container preserves its current allocator, which is used to allocate storage in case of reallocation.
+					_capacity = _size;
+					if (_capacity)
+						_data = _alloc.allocate(_capacity);
+					const_iterator	it = x.begin();
+					for (size_t i = 0; i < _size; i++)
+						_alloc.construct(_data + i, *it++);
 					return (*this);
 				};
 
@@ -194,38 +194,53 @@ namespace ft
 					return (_alloc.max_size());
 				};
 
-				/*
-				 ** @Brief : Resizes the container so that it contains n elements.
-				 */
-				void resize (size_type n, value_type val = value_type()) //TODO check capacity??!!
+
+				void resize(size_type n, value_type val = value_type())
 				{
-					if (max_size() < n)
-						throw (std::length_error("vector::capacity"));
-					if (n < _size)
+					if (n <= _capacity)
 					{
-						for (size_type i = n; i < _size; i++)
-							_alloc.destroy(&_data[i]);
+						if (n > _size)
+						{
+							for (size_type i = _size; i < n; ++i)
+							{
+								_alloc.construct(&_data[i], val);
+							}
+						}
+						else if (n < _size)
+						{
+							for (size_type i = n; i < _size; ++i)
+							{
+								_alloc.destroy(&_data[i]);
+							}
+						}
+						_size = n;
 					}
 					else
 					{
-						size_t	new_capacity = computeNewCapacity(n);
-						pointer	new_data = NULL;
-						new_data = _alloc.allocate(new_capacity);
-						for (size_type i = 0; i < n; i++)
+						size_t new_capacity = computeNewCapacity(n);
+						pointer new_data = _alloc.allocate(new_capacity);
+						for (size_type i = 0; i < n; ++i)
 						{
 							if (i < _size)
+							{
 								_alloc.construct(&new_data[i], _data[i]);
+							}
 							else
+							{
 								_alloc.construct(&new_data[i], val);
+							}
 						}
 						clear();
 						if (_capacity)
+						{
 							_alloc.deallocate(_data, _capacity);
+						}
 						_data = new_data;
 						_capacity = new_capacity;
+						_size = n;
 					}
-					_size = n;
-				};
+				}
+
 
 				/*
 				 ** @Brief : Returns the size of the storage space currently allocated for the vector, expressed in terms of elements
@@ -251,13 +266,6 @@ namespace ft
 				void reserve(size_type n)
 				{
 					size_type	new_capacity = computeNewCapacity(n);
-			/*	while (newCapacity < n)
-					{
-						if (newCapacity == 0)
-							newCapacity = 1;
-						else
-							newCapacity *= 2;
-					}*/
 
 					if (max_size() < new_capacity)
 						throw (std::length_error("vector::reserve"));//TODO check erreur message
@@ -416,85 +424,190 @@ namespace ft
 					return iterator(&_data[index_pos]);
 				};
 
-				void insert(iterator position, size_type n, const value_type& val)
-				{
+				template <typename U>
+					void insert(iterator position, size_type count, const U &value)
+					{
+						// Compute the index of the position iterator
+						size_type index = position - begin();
+
+						// If the vector needs more space to accommodate the new elements, allocate more memory
+						if (_size + count > _capacity) {
+							reserve(computeNewCapacity(_size + count));
+						}
+
+						// Move the elements after the position to make space for the new elements
+						std::copy_backward(begin() + index, end(), end() + count);
+
+						// Construct the new elements using the copy constructor with the specified value
+						for (size_type i = 0; i < count; ++i) {
+							_alloc.construct(&_data[index + i], value);
+						}
+
+						// Update the size
+						_size += count;		
+					}
+
+				/*	void insert(iterator position, size_type n, const value_type& val)
+					{
 
 					if (n == 0)
-						return ;
+					return ;
 					size_t	first_insertion = position - begin();
 					size_t	new_size = _size + n;
-					std::cout << "value of first_insertion " << first_insertion << std::endl;
-					if (_capacity < _size + n)
-					{
-						size_t	new_capacity = computeNewCapacity(_size + n);
-						pointer	new_data = _alloc.allocate(new_capacity);
-						for (size_t i = 0; i < first_insertion; i++)
-							_alloc.construct(&new_data[i], _data[i]);
-						for (size_t i = first_insertion; i < first_insertion + n; i++)
-							_alloc.construct(&new_data[i], val);
-						for (size_t i = first_insertion + n, y = first_insertion; i < _size + n; i++, y++)
-						{
-						/*	std::cout << "value of y : " << y << std::endl;
-							std::cout << "value of i : " << i << std::endl;
-							std::cout << "value of _data[y] : " << _data[y] << std::endl;*/
-							_alloc.construct(&new_data[i], _data[y]);
-						//	std::cout << "value of new_data[i] : " << new_data[i] << std::endl;
-						}
-						clear();
-						if (_capacity)
-							_alloc.deallocate(_data, _capacity);
-						_capacity = new_capacity;
-						_data = new_data;
-					}
-					else
-					{
-						for (size_t i = first_insertion, y = first_insertion + n; y < new_size; i++, y++)
-						{
-							std::cout << "value of new_size : " << y << std::endl;
-							std::cout << "value of _data[i] : " << _data[i] << std::endl;
-							_alloc.construct(&_data[y], _data[i]);
-							std::cout << "value of _data[new_size] : " << _data[y] << std::endl;
-						}
-						for (size_t i = first_insertion; i < first_insertion + n; i++)
-						{
-							std::cout << "value of val : " << val << std::endl;
-							std::cout << "value of insert : " << i << std::endl;
-							//_alloc.destroy(_data + i);
-							_alloc.construct(&_data[i], val);
-							std::cout << "value of _data[i] " << _data[i] << std::endl;
-						}
-					}
-					_size = new_size;
-					std::cout << "value of n " << n << std::endl;
-					std::cout << "size " << _size << std::endl;
-				};
+				//	std::cout << "value of first_insertion " << first_insertion << std::endl;
+				if (_capacity < _size + n)
+				{
+				size_t	new_capacity = computeNewCapacity(_size + n);
+				pointer	new_data = _alloc.allocate(new_capacity);
+				for (size_t i = 0; i < first_insertion; i++)
+				_alloc.construct(&new_data[i], _data[i]);
+				for (size_t i = first_insertion; i < first_insertion + n; i++)
+				_alloc.construct(&new_data[i], val);
+				for (size_t i = first_insertion + n, y = first_insertion; i < new_size; i++, y++)
+				{
+				//std::cout << "value of y : " << y << std::endl;
+				//std::cout << "value of i : " << i << std::endl;
+				//std::cout << "value of _data[y] : " << _data[y] << std::endl;
+				_alloc.construct(&new_data[i], _data[y]);
+				//	std::cout << "value of new_data[i] : " << new_data[i] << std::endl;
+				}
+				//clear();
+				if (_capacity)
+				_alloc.deallocate(_data, _capacity);
+				_capacity = new_capacity;
+				_data = new_data;
+				}
+				else
+				{
+				for (size_t i = new_size - 1, y = first_insertion + n;  first_insertion <= i; i--, y--)
+				{
+				//	std::cout << "value of new_size : " << y << std::endl;
+				//	std::cout << "value of _data[y] : " << _data[y] << std::endl;
+				//	std::cout << "value of i " << i << std::endl;
+				if (_size <= i)
+				{
+				_alloc.construct(&_data[i], _data[y]);
+				}
+				else
+				_data[i] = _data[y];
+				//	std::cout << "value of _data[new_size] : " << _data[i] << std::endl;
+				}
+				for (size_t i = first_insertion; i < (first_insertion + n); i++)
+				{
+				//	std::cout << "value of val : " << val << std::endl;
+				//	std::cout << "value of insert : " << i << std::endl;
+				if (_size <= i)
+				_alloc.construct(&_data[i], val);
+				else
+				_data[i] = val;
+				//	std::cout << "value of _data[i] " << _data[i] << std::endl;
+				}
+				}
+				_size = new_size;
+				//	std::cout << "value of n " << n << std::endl;
+				//	std::cout << "size " << _size << std::endl;
+				};*/
 
-				template <class InputIterator>
+
+				/*	template <class InputIterator>
+					void insert(iterator position, typename ft::enable_if<!ft::is_integral<InputIterator>::value, InputIterator>::type first, InputIterator last)
+					{
+					if (first == last)
+					return ;
+					for (InputIterator it = first; it != last; ++it)
+					{
+					insert(position, *it);
+					++position;
+					}
+					}*/
+
+				template <typename U>
+					void insert(iterator                                               position,
+							typename ft::enable_if<!ft::is_integral<U>::value, U>::type first,
+							U                                                           last)
+					{
+						if (first == last)
+							return;
+						if (position == end())
+						{
+							while (first != last)
+							{
+								push_back(*first);
+								++first;
+							}
+						}
+						else
+						{
+							vector	           v(first, last, get_allocator());
+							size_type             n = v.size();
+							size_type             new_size = _size + n;
+							size_type             first_insert = position - begin();
+							size_type             last_insert = first_insert + n;
+							if (new_size > _capacity)
+							{
+								iterator it = v.begin();
+								size_type   new_capacity = computeNewCapacity(new_size);
+								pointer tmp = _alloc.allocate(new_capacity);
+								for (size_type i = 0; i < first_insert; i++)
+									_alloc.construct(tmp + i, _data[i]);
+								for (size_type i = first_insert; i < last_insert; i++)
+									_alloc.construct(tmp + i, *it++);
+								for (size_type i = last_insert; i < new_size; i++)
+									_alloc.construct(tmp + i, _data[i - n]);
+								clear();
+								if (_capacity)
+									_alloc.deallocate(_data, _capacity);
+								_data = tmp;
+								_capacity = new_capacity;
+							}
+							else
+							{
+								reverse_iterator rit = v.rbegin();
+								size_type i = new_size;
+								while (i != first_insert)
+								{
+									i--;
+									if (i >= _size && i >= last_insert)
+										_alloc.construct(_data + i, _data[i - n]);
+									if (i >= _size && i < last_insert)
+										_alloc.construct(_data + i, *rit++);
+									if (i < _size && i >= last_insert)
+										_data[i] = _data[i - n];
+									if (i < _size && i < last_insert)
+										_data[i] = *rit++;
+								}
+							}
+							_size = new_size;
+						}
+					}
+
+
+				/*	template <class InputIterator>
 					void insert (iterator position, typename ft::enable_if<!ft::is_integral<InputIterator>::value, InputIterator>::type first, InputIterator last)
 					{
-						std::cout << "Insert iterator" << std::endl;
-						if (first == last)
-							return ;
-						/*if (first == end())
-						  {
-						  while (first++ != last)
-						  push_back(*first);
-						  }*/
-						//	else
-						//	{
-						//difference_type	index_pos = position - begin();
-						size_t			length_insert = ft::distance(begin(), position);
-						//size_t			previous_size = _size;
-						/*if (_size + length_insert <= _capacity)
-							reserve(_size + length_insert);
-						else
-							_size += length_insert;*/
-						for (size_t i = 0; i < length_insert; i++, first++)
-							insert(position + i, 1, *first);
-						//	}
+					std::cout << "Insert iterator" << std::endl;
+					if (first == last)
+					return ;
+					if (first == end())
+					{
+					while (first++ != last)
+					push_back(*first);
+					}
+				//	else
+				//	{
+				//difference_type	index_pos = position - begin();
+				size_t			length_insert = ft::distance(begin(), position);
+				//size_t			previous_size = _size;
+				if (_size + length_insert <= _capacity)
+				reserve(_size + length_insert);
+				else
+				_size += length_insert;
+				for (size_t i = 0; i < length_insert; i++, first++)
+				insert(position + i, 1, *first);
+				//	}
 
 
-					};
+				};*/
 
 				/*
 				 ** @Brief : Removes the element at pos
@@ -510,7 +623,7 @@ namespace ft
 				iterator erase (iterator first, iterator last)
 				{
 					iterator	it = first;
-					iterator	end = end();
+					iterator	end = this->end();
 					int			length_to_delete = ft::distance(first, last);
 					//equivalent to copy TODO checker si utilisation de copy n'est pas mieux
 					for (; last != end; ++last, ++first)
