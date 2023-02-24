@@ -55,7 +55,20 @@ namespace ft {
 				pointer operator->() const
 				{
 					iterator_type tmp = _current;
-					--tmp;
+					tmp--;
+					return (tmp.operator->());
+				};
+
+				reference operator*()
+				{
+					iterator_type tmp = _current;
+					return (*--tmp);
+				};
+
+				pointer operator->()
+				{
+					iterator_type tmp = _current;
+					tmp--;
 					return (tmp.operator->());
 				};
 
