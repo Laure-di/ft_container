@@ -79,7 +79,7 @@ namespace ft
 				{
 					_alloc = x.get_allocator();
 					_size = x.size();
-					_capacity = _size;
+					_capacity = x.capacity();
 					if (_capacity)
 						_data = _alloc.allocate(_capacity);
 					const_iterator	it = x.begin();
@@ -99,6 +99,8 @@ namespace ft
 				 */
 				vector& operator=(const vector& x)
 				{
+					 if (this != &x)
+					 {
 					clear();
 					if (_capacity)
 						_alloc.deallocate(_data, _capacity);
@@ -111,6 +113,7 @@ namespace ft
 					const_iterator	it = x.begin();
 					for (size_t i = 0; i < _size; i++)
 						_alloc.construct(_data + i, *it++);
+					 }
 					return (*this);
 				};
 
@@ -427,24 +430,26 @@ namespace ft
 				template <typename U>
 					void insert(iterator position, size_type count, const U &value)
 					{
-						// Compute the index of the position iterator
 						size_type index = position - begin();
+						size_type new_size = count + _size;
 
-						// If the vector needs more space to accommodate the new elements, allocate more memory
 						if (_size + count > _capacity) {
-							reserve(computeNewCapacity(_size + count));
+							reserve(_size + count);
 						}
-
-						// Move the elements after the position to make space for the new elements
-						std::copy_backward(begin() + index, end(), end() + count);
-
-						// Construct the new elements using the copy constructor with the specified value
+						for (size_type i = new_size - 1, y = _size - 1; index < i; i--, y--)
+						{
+							if (i < _size)
+								_data[i] = _data[y];
+							else
+							{
+								_alloc.construct(&_data[i], _data[y]);
+								_alloc.destroy(_data + y);
+							}
+						}
 						for (size_type i = 0; i < count; ++i) {
 							_alloc.construct(&_data[index + i], value);
 						}
-
-						// Update the size
-						_size += count;		
+						_size += count;	
 					}
 
 				/*	void insert(iterator position, size_type n, const value_type& val)
@@ -581,45 +586,44 @@ namespace ft
 						}
 					}
 
-
-				/*	template <class InputIterator>
-					void insert (iterator position, typename ft::enable_if<!ft::is_integral<InputIterator>::value, InputIterator>::type first, InputIterator last)
+				iterator erase(iterator position)
+				{
+					difference_type index = position - begin();
+					_alloc.destroy(&_data[index]);
+					for (size_t i = index; i < _size - 1; ++i)
 					{
-					std::cout << "Insert iterator" << std::endl;
-					if (first == last)
-					return ;
-					if (first == end())
-					{
-					while (first++ != last)
-					push_back(*first);
+						_data[i] = _data[i + 1];
 					}
-				//	else
-				//	{
-				//difference_type	index_pos = position - begin();
-				size_t			length_insert = ft::distance(begin(), position);
-				//size_t			previous_size = _size;
-				if (_size + length_insert <= _capacity)
-				reserve(_size + length_insert);
-				else
-				_size += length_insert;
-				for (size_t i = 0; i < length_insert; i++, first++)
-				insert(position + i, 1, *first);
-				//	}
+					--_size;
+					return (iterator(&_data[index]));
+				};
 
+				iterator erase(iterator first, iterator last)
+				{
+					difference_type index = first - begin();
+					difference_type range = last - first;
+					for (size_t i = 0; i < (size_t)range; ++i)
+					{
+						_alloc.destroy(&_data[index + i]);
+					}
+					for (size_t i = index + range; i < _size; ++i)
+					{
+						_data[i - range] = _data[i];
+					}
+					_size -= range;
+					return (iterator(&_data[index]));
+				};
 
-				};*/
 
 				/*
 				 ** @Brief : Removes the element at pos
-				 */
 				iterator erase (iterator position)
 				{
 					return (erase(position, position + 1));
 				};
 
-				/*
 				 ** @Brief : Removes the elements in the range [first, last)
-				 */
+	
 				iterator erase (iterator first, iterator last)
 				{
 					iterator	it = first;
@@ -635,7 +639,7 @@ namespace ft
 						_size--;
 					}
 					return (it);
-				};
+				};*/
 
 				/*
 				 ** @Brief : Exchanges the content of the container by the content of x, which is another vector object of the same type. Sizes may differ.
