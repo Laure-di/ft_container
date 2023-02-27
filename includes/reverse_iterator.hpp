@@ -65,19 +65,8 @@ namespace ft {
 
 				pointer operator->()
 				{
-
-					return (tmp.operator->());
-				};
-
-				reference operator*()
-				{
 					iterator_type tmp = _current;
-					return (*--tmp);
-				};
-
-				pointer operator->()
-				{
-
+					tmp--;
 					return (tmp.operator->());
 				};
 
@@ -208,6 +197,5 @@ namespace ft {
 			return reverse_iterator<Iterator>(x.base() - n);
 		};
 }
-
 #endif
 
