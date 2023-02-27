@@ -65,8 +65,19 @@ namespace ft {
 
 				pointer operator->()
 				{
+
+					return (tmp.operator->());
+				};
+
+				reference operator*()
+				{
 					iterator_type tmp = _current;
-					tmp--;
+					return (*--tmp);
+				};
+
+				pointer operator->()
+				{
+
 					return (tmp.operator->());
 				};
 
