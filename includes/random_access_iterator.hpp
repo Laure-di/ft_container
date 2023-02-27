@@ -33,7 +33,7 @@ namespace ft
 			};
 			~random_access_iterator(){};
 
-			random_access_iterator<T>	&operator=(const random_access_iterator& ptr)
+			random_access_iterator<T>		&operator=(const random_access_iterator& ptr)
 			{
 				if (&ptr != this)
 					this->_current = ptr._current;
@@ -53,51 +53,51 @@ namespace ft
 			{
 				return (_current);
 			};
-			random_access_iterator<T>	&operator++(void)
+			random_access_iterator<T>		&operator++(void)
 			{
 				_current++;
 				return (*this);
 			};
-			random_access_iterator<T>	operator++(int)
+			random_access_iterator<T>		operator++(int)
 			{
 				random_access_iterator	tmp = *this;
 				_current++;
 				return (tmp);
 			};
-			random_access_iterator<T>	&operator--(void)
+			random_access_iterator<T>		&operator--(void)
 			{
 				_current--;
 				return (*this);
 			};
-			random_access_iterator<T>	operator--(int)
+			random_access_iterator<T>		operator--(int)
 			{
 				random_access_iterator	tmp = *this;
 				_current--;
 				return (tmp);
 			};
-			random_access_iterator<T>	operator+(difference_type n) const
+			random_access_iterator<T>		operator+(difference_type n) const
 			{
 				return (random_access_iterator(_current + n));
 			};
-			random_access_iterator<T>	&operator+=(difference_type n)
+			random_access_iterator<T>		&operator+=(difference_type n)
 			{
 				_current += n;
 				return (*this);
 			};
-			random_access_iterator<T>	operator-(difference_type n) const
+			random_access_iterator<T>		operator-(difference_type n) const
 			{
 				return (random_access_iterator(_current - n));
 			};
-			random_access_iterator<T>	&operator-=(difference_type n)
+			random_access_iterator<T>		&operator-=(difference_type n)
 			{
 				_current -= n;
 				return (*this);
 			};
-			difference_type			operator-(const random_access_iterator& ptr) const
+			difference_type			operator-(const random_access_iterator<T>& ptr) const
 			{
 				return(_current - ptr.base());
 			};
-			difference_type			operator+(const random_access_iterator& ptr) const
+			difference_type			operator+(const random_access_iterator<T>& ptr) const
 			{
 				return(_current + ptr.base());
 			};
